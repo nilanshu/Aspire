@@ -3,6 +3,7 @@
 const express = require('express')
 const db = require("./app/models")
 const loanRouter = require('./app/routes/loan.js')
+const userRouter = require('./app/routes/user.js')
 
 const app = express()
 const port = 3000
@@ -10,6 +11,7 @@ const port = 3000
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(loanRouter)
+app.use(userRouter)
 
 db.sequelize.sync()
     .then(() => {
