@@ -2,9 +2,13 @@ const {REPAYMENT_STATUS} = require('../utils/constants')
 
 
 module.exports = (sequelize, Sequelize) => {
-    const Repayment = sequelize.define("repayment", {
+    const repayment = sequelize.define("repayment", {
         loanId: {
-            type: Sequelize.INTEGER(16)
+            type: Sequelize.INTEGER(16),
+            references: {
+                model: 'loan',
+                key: 'id'
+            }
         },
         amount: {
             type: Sequelize.DECIMAL(10, 5)
@@ -16,7 +20,13 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             defaultValue: REPAYMENT_STATUS.PENDING
         }
+    }, {
+        tableName: 'repayment',
+        associate: function (models) {
+            repayment.belongsTo(models.loan, {foreignKey: 'loanId'});
+            models.loan.hasMany(repayment, {foreignKey: 'loanId'});
+        }
     })
 
-    return Repayment
+    return repayment
 }

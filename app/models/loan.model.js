@@ -2,7 +2,7 @@ const {LOAN_STATUS} = require('../utils/constants')
 
 
 module.exports = (sequelize, Sequelize) => {
-    const Loan = sequelize.define("loan", {
+    const loan = sequelize.define("loan", {
         amount: {
             type: Sequelize.INTEGER(16),
             defaultValue: 0
@@ -19,7 +19,9 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             defaultValue: LOAN_STATUS.PENDING
         }
+    }, {
+        tableName: 'loan'
     })
 
-    return Loan
+    return loan
 }
