@@ -1,7 +1,7 @@
-import * as loanService from '../services/loan.js'
+const loanService = require('../services/loan.js')
 
 
-export const createLoanRequest = async (req, res) => {
+const createLoanRequest = async (req, res) => {
     const amount = req.body.amount
     const term = req.body.term
     try {
@@ -11,4 +11,8 @@ export const createLoanRequest = async (req, res) => {
         console.error(`Error in creating loan request: amount-${amount}, term-${term} `, error.message)
         res.status(500).send({status: false, message: error.message})
     }
+}
+
+module.exports = {
+    createLoanRequest
 }
