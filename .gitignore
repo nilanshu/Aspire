@@ -4,8 +4,8 @@
 /logs
 /pids
 node_modules/*
-config/production-conn.json
-config/db-connection.json
+app/config/production-conn.json
+app/config/db.config.js
 .scannerwork/*
 .idea/
 yarn.lock

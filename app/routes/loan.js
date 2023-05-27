@@ -1,7 +1,8 @@
-import express from 'express'
+const express = require('express')
 const router = express.Router()
-import * as loanController from '../controllers/loan.js'
+const loanController = require('../controllers/loan')
+
 
 router.post('/loan', loanController.createLoanRequest)
 
-export default router
+module.exports = router
