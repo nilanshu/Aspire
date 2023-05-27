@@ -1,3 +1,6 @@
+const {LOAN_STATUS} = require('../utils/constants')
+
+
 module.exports = (sequelize, Sequelize) => {
     const Loan = sequelize.define("loan", {
         amount: {
@@ -8,9 +11,13 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER(6)
         },
         status: {
-            type: Sequelize.ENUM('PENDING','APPROVED', 'REJECTED'),
+            type: Sequelize.ENUM(
+                LOAN_STATUS.PENDING,
+                LOAN_STATUS.APPROVED,
+                LOAN_STATUS.REJECTED,
+                LOAN_STATUS.PAID),
             allowNull: false,
-            defaultValue: 'PENDING'
+            defaultValue: LOAN_STATUS.PENDING
         }
     })
 

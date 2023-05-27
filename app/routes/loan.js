@@ -4,5 +4,6 @@ const loanController = require('../controllers/loan')
 
 
 router.post('/loan', loanController.createLoanRequest)
+router.patch('/loans/:id/approve', loanController.approveLoan)
 
 module.exports = router

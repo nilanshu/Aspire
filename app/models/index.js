@@ -20,5 +20,6 @@ db.Sequelize = Sequelize
 db.sequelize = sequelize
 
 db.loans = require("./loan.model.js")(sequelize, Sequelize)
+db.repayments = require("./repayment.model.js")(sequelize, Sequelize)
 
 module.exports = db
