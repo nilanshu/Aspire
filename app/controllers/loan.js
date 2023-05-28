@@ -2,10 +2,11 @@ const loanService = require('../services/loan.js')
 
 
 const createLoanRequest = async (req, res) => {
+    const userId = req.user.id
     const amount = req.body.amount
     const term = req.body.term
     try {
-        const {status, code, data, message} = await loanService.createLoanRequest(amount, term)
+        const {status, code, data, message} = await loanService.createLoanRequest(userId, amount, term)
         res.status(code).send({status, ...(data && {data}), ...(message && {message})})
     } catch (error) {
         console.error(`Error in creating loan request: amount-${amount}, term-${term} `, error.message)

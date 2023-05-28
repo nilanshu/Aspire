@@ -4,12 +4,12 @@ const Repayment = db.repayments
 const {LOAN_STATUS} = require('../utils/constants')
 
 
-const createLoanRequest = async (amount, term) => {
-    if (!amount || !term) {
+const createLoanRequest = async (userId, amount, term) => {
+    if (!userId || !amount || !term) {
         return {status: false, code: 400, message: "amount and term are mandatory"}
     }
 
-    let loanData = { amount, term }
+    let loanData = { userId, amount, term }
 
     const data = await Loan.create(loanData)
     return {status: true, code: 201, data}
