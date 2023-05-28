@@ -37,15 +37,13 @@ const login = async (email, password) => {
         return {status: false, code: 400, message: `user with email ${email} doesn't exist`}
     }
     const hash = user["password"]
+    const sessionKey = user["sessionKey"]
 
     const isValidPassword = await bcrypt.compare(password, hash)
 
     if (!isValidPassword) {
         return {status: false, code: 400, message: `Invalid password`}
     }
-
-    const sessionKey = uuid.v4()
-    await User.update({sessionKey}, {where: {email}})
 
     const data = {email, sessionKey}
 
