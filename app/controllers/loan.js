@@ -26,7 +26,31 @@ const approveLoan = async (req, res) => {
     }
 }
 
+const getUserLoans = async (req, res) => {
+    const userId = req.user.id
+    try {
+        const {status, code, data, message} = await loanService.getUserLoans(userId)
+        res.status(code).send({status, ...(data && {data}), ...(message && {message})})
+    } catch (error) {
+        console.error(`Error in fetching user loans: userId-${userId}`, error.message)
+        res.status(500).send({status: false, message: error.message})
+    }
+}
+
+const getLoanRepayments = async (req, res) => {
+    const loanId = req.query.loanId
+    try {
+        const {status, code, data, message} = await loanService.getLoanRepayments(loanId)
+        res.status(code).send({status, ...(data && {data}), ...(message && {message})})
+    } catch (error) {
+        console.error(`Error in fetching loan repayments: loanId-${loanId}`, error.message)
+        res.status(500).send({status: false, message: error.message})
+    }
+}
+
 module.exports = {
     createLoanRequest,
-    approveLoan
+    approveLoan,
+    getUserLoans,
+    getLoanRepayments
 }

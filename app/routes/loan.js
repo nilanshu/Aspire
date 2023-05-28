@@ -6,5 +6,7 @@ const authMiddleware = require('../middlewares/auth')
 
 router.post('/loan', authMiddleware.userAuthentication, loanController.createLoanRequest)
 router.patch('/loans/:id/approve', authMiddleware.bankStaffAuthentication, loanController.approveLoan)
+router.get('/loans', authMiddleware.userAuthentication, loanController.getUserLoans)
+router.get('/repayments', authMiddleware.userAuthentication, loanController.getLoanRepayments)
 
 module.exports = router

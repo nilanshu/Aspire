@@ -40,7 +40,27 @@ const approveLoan = async (loanId, loanStatus) => {
     return {status: true, code: 200, data}
 }
 
+const getUserLoans = async (userId) => {
+    if (!userId) {
+        return {status: false, code: 400, message: "userId is mandatory"}
+    }
+
+    const loans = await Loan.findAll({where: {userId}, raw: true})
+    return {status: true, code: 200, loans}
+}
+
+const getLoanRepayments = async (loanId) => {
+    if (!loanId) {
+        return {status: false, code: 400, message: "loanId is mandatory"}
+    }
+
+    const repayments = await Repayment.findAll({where: {loanId}, raw: true})
+    return {status: true, code: 200, repayments}
+}
+
 module.exports = {
     createLoanRequest,
-    approveLoan
+    approveLoan,
+    getUserLoans,
+    getLoanRepayments
 }
