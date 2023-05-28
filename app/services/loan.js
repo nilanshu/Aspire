@@ -1,7 +1,7 @@
 const db = require("../models")
 const Loan = db.loans
 const Repayment = db.repayments
-const {LOAN_STATUS} = require('../utils/constants')
+const {LOAN_STATUS, REPAYMENT_STATUS} = require('../utils/constants')
 
 
 const createLoanRequest = async (userId, amount, term) => {
@@ -58,9 +58,27 @@ const getLoanRepayments = async (loanId) => {
     return {status: true, code: 200, repayments}
 }
 
+const payRepayment = async (repaymentId, amount) => {
+    if (!repaymentId || !amount) {
+        return {status: false, code: 400, message: "repaymentId and amount are mandatory"}
+    }
+
+    const repayment = await Repayment.findOne({where: {id: repaymentId, status: REPAYMENT_STATUS.PENDING}, raw: true})
+    if (!repayment) {
+        return {status: false, code: 400, message: `No pending repayment exists with repaymentId: ${repaymentId}`}
+    }
+    const repaymentAmount = repayment["amount"]
+    if (repaymentAmount > amount) {
+        return {status: false, code: 400, message: `Amount submitted ${amount} is less than the required repayment amount ${repaymentAmount}`}
+    }
+    const data = await Repayment.update({status: REPAYMENT_STATUS.PAID}, {where: {id: repaymentId}})
+    return {status: true, code: 200, data}
+}
+
 module.exports = {
     createLoanRequest,
     approveLoan,
     getUserLoans,
-    getLoanRepayments
+    getLoanRepayments,
+    payRepayment
 }

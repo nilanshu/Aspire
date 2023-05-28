@@ -48,9 +48,22 @@ const getLoanRepayments = async (req, res) => {
     }
 }
 
+const payRepayment = async (req, res) => {
+    const repaymentId = req.params.id
+    const amount = req.body.amount
+    try {
+        const {status, code, data, message} = await loanService.payRepayment(repaymentId, amount)
+        res.status(code).send({status, ...(data && {data}), ...(message && {message})})
+    } catch (error) {
+        console.error(`Error in paying loan repayment: repaymentId-${repaymentId}, amount-${amount}`, error.message)
+        res.status(500).send({status: false, message: error.message})
+    }
+}
+
 module.exports = {
     createLoanRequest,
     approveLoan,
     getUserLoans,
-    getLoanRepayments
+    getLoanRepayments,
+    payRepayment
 }

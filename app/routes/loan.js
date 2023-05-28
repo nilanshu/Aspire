@@ -8,5 +8,7 @@ router.post('/loan', authMiddleware.userAuthentication, loanController.createLoa
 router.patch('/loans/:id/approve', authMiddleware.bankStaffAuthentication, loanController.approveLoan)
 router.get('/loans', authMiddleware.userAuthentication, loanController.getUserLoans)
 router.get('/repayments', authMiddleware.userAuthentication, loanController.getLoanRepayments)
+router.patch('/repayments/:id/pay', authMiddleware.userAuthentication, loanController.payRepayment)
+
 
 module.exports = router
