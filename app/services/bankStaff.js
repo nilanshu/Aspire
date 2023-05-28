@@ -34,7 +34,7 @@ const login = async (email, password) => {
 
     let bankStaff = await BankStaff.findOne({where: {email}, raw: true})
     if (!bankStaff) {
-        return {status: false, code: 400, message: `bank staff with email ${email} doesn't exist`}
+        return {status: false, code: 404, message: `bank staff with email ${email} doesn't exist`}
     }
     const hash = bankStaff["password"]
     const sessionKey = bankStaff["sessionKey"]

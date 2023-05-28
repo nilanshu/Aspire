@@ -34,7 +34,7 @@ const login = async (email, password) => {
 
     let user = await User.findOne({where: {email}, raw: true})
     if (!user) {
-        return {status: false, code: 400, message: `user with email ${email} doesn't exist`}
+        return {status: false, code: 404, message: `user with email ${email} doesn't exist`}
     }
     const hash = user["password"]
     const sessionKey = user["sessionKey"]

@@ -15,7 +15,7 @@ const createLoanRequest = async (userId, amount, term) => {
     return {status: true, code: 201, data}
 }
 
-const approveLoan = async (loanId, loanStatus) => {
+const approveLoan = async (loanId, loanStatus, approverId) => {
     if (!loanId || !loanStatus) {
         return {status: false, code: 400, message: "loanId and loanStatus are mandatory"}
     }
@@ -36,7 +36,8 @@ const approveLoan = async (loanId, loanStatus) => {
         await Promise.all(repaymentPromises)
     }
 
-    const data = await Loan.update({status: loanStatus}, {where: {id: loanId}})
+    await Loan.update({status: loanStatus, approverId: approverId}, {where: {id: loanId}})
+    const data = {status: loanStatus}
     return {status: true, code: 200, data}
 }
 
@@ -46,7 +47,7 @@ const getUserLoans = async (userId) => {
     }
 
     const loans = await Loan.findAll({where: {userId}, raw: true})
-    return {status: true, code: 200, loans}
+    return {status: true, code: 200, data: {loans}}
 }
 
 const getLoanRepayments = async (loanId) => {
@@ -55,7 +56,7 @@ const getLoanRepayments = async (loanId) => {
     }
 
     const repayments = await Repayment.findAll({where: {loanId}, raw: true})
-    return {status: true, code: 200, repayments}
+    return {status: true, code: 200, data: {repayments}}
 }
 
 const payRepayment = async (repaymentId, amount) => {
@@ -65,7 +66,7 @@ const payRepayment = async (repaymentId, amount) => {
 
     const repayment = await Repayment.findOne({where: {id: repaymentId, status: REPAYMENT_STATUS.PENDING}, raw: true})
     if (!repayment) {
-        return {status: false, code: 400, message: `No pending repayment exists with repaymentId: ${repaymentId}`}
+        return {status: false, code: 404, message: `No pending repayment exists with repaymentId: ${repaymentId}`}
     }
     const repaymentAmount = repayment["amount"]
     if (repaymentAmount > amount) {

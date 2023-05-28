@@ -17,8 +17,9 @@ const createLoanRequest = async (req, res) => {
 const approveLoan = async (req, res) => {
     const loanId = req.params.id
     const loanStatus = req.body.status
+    const approverId = req.bankStaff.id
     try {
-        const {status, code, data, message} = await loanService.approveLoan(loanId, loanStatus)
+        const {status, code, data, message} = await loanService.approveLoan(loanId, loanStatus, approverId)
         res.status(code).send({status, ...(data && {data}), ...(message && {message})})
     } catch (error) {
         console.error(`Error in approving loan request: loanId-${loanId}, loanStatus-${loanStatus} `, error.message)
