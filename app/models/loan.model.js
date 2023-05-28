@@ -25,12 +25,22 @@ module.exports = (sequelize, Sequelize) => {
                 LOAN_STATUS.PAID),
             allowNull: false,
             defaultValue: LOAN_STATUS.PENDING
+        },
+        approverId: {
+            type: Sequelize.INTEGER(16),
+            allowNull: true,
+            references: {
+                model: 'bankStaff',
+                key: 'id'
+            }
         }
     }, {
         tableName: 'loan',
         associate: function (models) {
             loan.belongsTo(models.user, {foreignKey: 'userId'});
             models.user.hasMany(loan, {foreignKey: 'userId'});
+            loan.belongsTo(models.bankStaff, {foreignKey: 'approverId'});
+            models.bankStaff.hasMany(loan, {foreignKey: 'approverId'});
         }
     })
 
