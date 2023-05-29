@@ -76,6 +76,13 @@ const payRepayment = async (repaymentId, amount) => {
         return {status: false, code: 400, message: `Amount submitted ${amount} is less than the required repayment amount ${repaymentAmount}`}
     }
     await Repayment.update({status: REPAYMENT_STATUS.PAID}, {where: {id: repaymentId}})
+
+    const loanId = repayment["loanId"]
+    const pendingRepayment = await Repayment.findOne({where: {loanId, status: REPAYMENT_STATUS.PENDING}, raw: true})
+    if (!pendingRepayment) {
+        await Loan.update({status: LOAN_STATUS.PAID}, {where: {id: loanId}})
+    }
+
     return {status: true, code: 200, data: {id: repaymentId, status: REPAYMENT_STATUS.PAID}}
 }
 
