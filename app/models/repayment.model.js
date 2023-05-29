@@ -19,6 +19,10 @@ module.exports = (sequelize, Sequelize) => {
                 REPAYMENT_STATUS.PAID),
             allowNull: false,
             defaultValue: REPAYMENT_STATUS.PENDING
+        },
+        dueDate: {
+            type: Sequelize.DATE,
+            allowNull: true,
         }
     }, {
         tableName: 'repayment',

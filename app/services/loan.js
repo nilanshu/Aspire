@@ -25,12 +25,15 @@ const approveLoan = async (loanId, loanStatus, approverId) => {
         loan = JSON.parse(JSON.stringify(loan))
         const amount = loan["amount"]
         const term = loan["term"]
-        const installmentAmount = term ? amount/term : 0
-        const repaymentData = {loanId, amount: installmentAmount}
+
+        const installmentAmount = term ? amount / term : 0
 
         const repaymentPromises = []
 
         for (let i = 0; i < term; i++) {
+            const dueDate = new Date()
+            dueDate.setDate(dueDate.getDate() + 7 * (i + 1))
+            const repaymentData = {loanId, amount: installmentAmount, dueDate}
             repaymentPromises.push(Repayment.create(repaymentData))
         }
         await Promise.all(repaymentPromises)
@@ -55,7 +58,7 @@ const getLoanRepayments = async (loanId) => {
         return {status: false, code: 400, message: "loanId is mandatory"}
     }
 
-    const repayments = await Repayment.findAll({where: {loanId}, raw: true})
+    const repayments = await Repayment.findAll({where: {loanId}, order: ['dueDate'], raw: true})
     return {status: true, code: 200, data: {repayments}}
 }
 
@@ -72,8 +75,8 @@ const payRepayment = async (repaymentId, amount) => {
     if (repaymentAmount > amount) {
         return {status: false, code: 400, message: `Amount submitted ${amount} is less than the required repayment amount ${repaymentAmount}`}
     }
-    const data = await Repayment.update({status: REPAYMENT_STATUS.PAID}, {where: {id: repaymentId}})
-    return {status: true, code: 200, data}
+    await Repayment.update({status: REPAYMENT_STATUS.PAID}, {where: {id: repaymentId}})
+    return {status: true, code: 200, data: {id: repaymentId, status: REPAYMENT_STATUS.PAID}}
 }
 
 module.exports = {
